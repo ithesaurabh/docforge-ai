@@ -1,0 +1,46 @@
+{
+  "name": "docforge-ai",
+  "version": "1.0.0",
+  "description": "AI-powered Document Intelligence Backend using TypeScript, LangChain, PostgreSQL, pgvector, and Ollama.",
+  "keywords": [
+    "ai",
+    "rag",
+    "langchain",
+    "ollama",
+    "typescript",
+    "express",
+    "pgvector",
+    "postgresql",
+    "vector-search",
+    "semantic-search",
+    "backend",
+    "document-intelligence"
+  ],
+  "homepage": "https://github.com/ithesaurabh/docforge-ai#readme",
+  "bugs": {
+    "url": "https://github.com/ithesaurabh/docforge-ai/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ithesaurabh/docforge-ai.git"
+  },
+  "license": "SEE LICENSE IN LICENSE",
+  "author": "Saurabh Kumar Jha",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.6",
+    "nodemon": "^3.1.14",
+    "prisma": "^7.8.0",
+    "tsx": "^4.23.0",
+    "typescript": "^7.0.2"
+  },
+  "dependencies": {
+    "@prisma/client": "^7.8.0",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1"
+  }
+}
