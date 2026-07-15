@@ -1,7 +1,7 @@
 import multer from "multer";
-
 import storageConfig  from "../../../config/storage.js";
 import { SUPPORTED_DOCUMENT_MIME_TYPES } from "../constants/document-formats.js";
+import ApiError  from "../../../utils/ApiError.js";
 
 export const upload = multer({
     storage: multer.memoryStorage(),
@@ -19,6 +19,6 @@ export const upload = multer({
             return callback(null, true);
         }
 
-        callback(new Error("Unsupported document type."));
+        callback(new ApiError(400, "Unsupported document type."));
     },
 });

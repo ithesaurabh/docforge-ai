@@ -1,36 +1,22 @@
 import type { NextFunction, Request, Response } from "express";
-import { DocumentService } from "../services/document.js";
+import DocumentService from "../services/document.js";
+import { upload } from "../middleware/upload.js";
 
-export class DocumentController {
-    private readonly documentService = new DocumentService();
 
-    upload = async (
-        req: Request,
-        res: Response,
-        next: NextFunction
-    ): Promise<void> => {
-        try {
-            if (!req.file) {
-                res.status(400).json({
-                    success: false,
-                    message: "No document uploaded.",
-                });
 
-                return;
-            }
+const DocumentUpload = async (req: Request, res: Response) => {
+    if (!req.file) {
+        return res.status(400).json({
+            success: false,
+            message: "No document uploaded.",
+        });
+    }
+    const document = await DocumentService.uploadDocument(req.file, req.body.title);
 
-            const document = await this.documentService.upload(
-                req.file,
-                req.body.title
-            );
-
-            res.status(201).json({
-                success: true,
-                message: "Document uploaded successfully.",
-                data: document,
-            });
-        } catch (error) {
-            next(error);
-        }
-    };
-}
+    return res.status(201).json({
+        success: true,
+        message: "Document uploaded successfully.",
+        data: document,
+    });
+};
+export default { DocumentUpload };
