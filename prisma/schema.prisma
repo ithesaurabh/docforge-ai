@@ -11,3 +11,62 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+enum StorageProvider {
+  LOCAL
+  S3
+}
+enum DocumentType {
+  PDF
+  DOCX
+  TXT
+  MARKDOWN
+} 
+enum DocumentStatus {
+  UPLOADED
+  PROCESSING
+  READY
+  FAILED
+}
+
+model Document {
+  id               String            @id @default(uuid())
+
+  title            String
+  originalName     String
+
+  documentType DocumentType
+  mimeType     String
+  fileSize         Int
+
+  storageProvider  StorageProvider
+  storageKey       String @unique
+
+  checksum         String? @unique
+
+  status           DocumentStatus    @default(UPLOADED)
+
+  chunks           DocumentChunk[]
+
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+
+  @@index([status])
+}
+
+model DocumentChunk {
+  id          String    @id @default(uuid())
+
+  documentId  String
+
+  chunkIndex  Int
+
+  content     String
+
+  metadata    Json?
+
+  document    Document  @relation(fields: [documentId], references: [id], onDelete: Cascade)
+
+  createdAt   DateTime  @default(now())
+
+  @@index([documentId, chunkIndex])
+}
