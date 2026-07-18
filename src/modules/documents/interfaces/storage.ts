@@ -1,4 +1,5 @@
-export type StorageProvider = "LOCAL" | "S3";
+import { StorageProvider } from "../../../generated/prisma/client.js";
+
 
 export interface StoredFile {
     storageKey: string;
