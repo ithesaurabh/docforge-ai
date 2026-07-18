@@ -46,7 +46,7 @@ const remove = async (storageKey: string): Promise<void> => {
     }
 };
 
-export const localStorageService: StorageService = {
+export const LocalStorageService: StorageService = {
     upload,
     delete: remove,
 };

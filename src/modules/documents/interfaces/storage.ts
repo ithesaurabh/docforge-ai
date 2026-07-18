@@ -1,5 +1,3 @@
-import type { Express } from "express";
-
 export type StorageProvider = "LOCAL" | "S3";
 
 export interface StoredFile {

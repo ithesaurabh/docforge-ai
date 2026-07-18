@@ -3,10 +3,9 @@ import path from "path";
 import { prisma } from "../../../prisma/client.js";
 import ApiError from "../../../utils/ApiError.js";
 import { DOCUMENT_TYPE_MAP } from "../constants/document-formats.js";
-import { StorageFactory } from "./storage-factory.js";
+import StorageFactory  from "./storage-factory.js";
 
 const storage = StorageFactory.create();
-
 const uploadDocument = async (file: Express.Multer.File, title?: string ) => {
     const storedFile = await storage.upload(file);
 
@@ -24,6 +23,18 @@ const uploadDocument = async (file: Express.Multer.File, title?: string ) => {
         throw new ApiError(400, "Unsupported document type.");
     }
 
+    //check existing document with the same checksum
+    const existingDocument = await prisma.document.findUnique({
+        where: {
+            checksum,
+        },
+    });
+
+    if (existingDocument) {
+        storage.delete(storedFile.storageKey); 
+        throw new ApiError(409, "Document already exists.");
+    }
+
     return prisma.document.create({
         data: {
             title: title?.trim() ?? path.basename(file.originalname, extension),
@@ -36,6 +47,6 @@ const uploadDocument = async (file: Express.Multer.File, title?: string ) => {
             checksum,
         },
     });
-};
+};  
 
 export default { uploadDocument };
