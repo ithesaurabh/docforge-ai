@@ -8,6 +8,6 @@ export interface StoredFile {
 
 export interface StorageService {
     upload(file: Express.Multer.File): Promise<StoredFile>;
-
     delete(storageKey: string): Promise<void>;
+    resolve(storageKey: string): Promise<string>;
 }

@@ -29,8 +29,10 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "dev":  "nodemon --watch src --ext ts --exec tsx src/server.ts",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "nodemon --watch src --ext ts --exec tsx src/server.ts",
+    "test": "tsx src/modules/documents/services/test.ts",
+    "build": "tsc",
+    "start": "node dist/server.js"
   },
   "devDependencies": {
     "@types/express": "^5.0.6",
@@ -45,7 +47,9 @@
     "@prisma/client": "^7.8.0",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
+    "mammoth": "^1.12.0",
     "multer": "^2.2.0",
+    "pdfjs-dist": "^4.10.38",
     "pg": "^8.22.0"
   }
 }

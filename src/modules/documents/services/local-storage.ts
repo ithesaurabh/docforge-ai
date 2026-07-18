@@ -45,8 +45,17 @@ const remove = async (storageKey: string): Promise<void> => {
         // Ignore if the file does not exist.
     }
 };
+const resolve = async (
+    storageKey: string
+): Promise<string> => {
+    return path.join(
+        storageConfig.UPLOAD_ROOT,
+        storageKey
+    );
+};
 
 export const LocalStorageService: StorageService = {
     upload,
     delete: remove,
+    resolve,
 };
