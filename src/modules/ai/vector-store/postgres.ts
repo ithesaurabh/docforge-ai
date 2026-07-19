@@ -17,16 +17,9 @@ export const postgresVectorStore: VectorStore = {
         }
     },
 
-    async similaritySearch(
-        embedding: number[],
-        limit: number
-    ): Promise<SimilaritySearchResult[]> {
-        const results = await prisma.$queryRaw<
-            {
-                id: string;
-                score: number;
-            }[]
-        >(Prisma.sql`
+    async similaritySearch(embedding: number[], limit: number): Promise<SimilaritySearchResult[]> {
+        const results = await prisma.$queryRaw< { id: string; score: number; }[]>
+        (Prisma.sql`
             SELECT
                 id,
                 embedding <=> ${toPgVector(embedding)}::vector AS score
