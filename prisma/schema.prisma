@@ -65,6 +65,8 @@ model DocumentChunk {
 
   metadata    Json?
 
+  embedding   Unsupported("vector(768)")?
+  
   document    Document  @relation(fields: [documentId], references: [id], onDelete: Cascade)
 
   createdAt   DateTime  @default(now())
