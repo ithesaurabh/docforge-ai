@@ -29,6 +29,8 @@ export const retrievalService: Retriever = {
 
 
             return {
+                documentId: chunk?.documentId ?? "",
+                page: chunk?.page ?? 0,
                 chunkId: result.chunkId,
                 content: chunk?.content ?? "",
                 score: result.score,

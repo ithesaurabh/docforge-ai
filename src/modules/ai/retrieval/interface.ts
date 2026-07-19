@@ -1,4 +1,6 @@
 export interface RetrievedChunk {
+    documentId: string;
+    page: number;
     chunkId: string;
     content: string;
     score: number;
