@@ -8,11 +8,14 @@ export interface SimilaritySearchResult {
     score: number;
 }
 
+export interface SimilaritySearchRequest {
+    embedding: number[];
+    limit: number;
+    documentIds?: string[];
+}
+
 export interface VectorStore {
     index(chunks: ChunkEmbedding[]): Promise<void>;
 
-    similaritySearch(
-        embedding: number[],
-        limit: number
-    ): Promise<SimilaritySearchResult[]>;
+    similaritySearch(request: SimilaritySearchRequest): Promise<SimilaritySearchResult[]>;
 }
