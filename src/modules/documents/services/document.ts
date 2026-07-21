@@ -4,7 +4,7 @@ import { prisma } from "../../../prisma/client.js";
 import ApiError from "../../../utils/ApiError.js";
 import { DOCUMENT_TYPE_MAP } from "../constants/document-formats.js";
 import StorageFactory from "./storage-factory.js";
-import { processDocument } from "./process.js";
+import { processDocUpload } from "../../../redis/bullmq/process-doc-upload.queue.js";
 import storageConfig from "../../../config/storage.js";
 import fs from "fs";
 const storage = StorageFactory.create();
@@ -49,40 +49,22 @@ const uploadDocument = async (file: Express.Multer.File, title?: string) => {
             checksum,
         },
     });
+    await prisma.document.update({
+        where: {
+            id: document.id,
+        },
+        data: {
+            status: "PROCESSING",
+        },
+    });
 
-    try {
-        await prisma.document.update({
-            where: {
-                id: document.id,
-            },
-            data: {
-                status: "PROCESSING",
-            },
-        });
-
-        await processDocument(document.id);
-
-        await prisma.document.update({
-            where: {
-                id: document.id,
-            },
-            data: {
-                status: "READY",
-            },
-        });
-    } catch (error) {
-        await prisma.document.update({
-            where: {
-                id: document.id,
-            },
-            data: {
-                status: "FAILED",
-            },
-        });
-
-        throw error;
-    }
-
+    await processDocUpload.add("process-doc-upload", {id: document.id}, {
+        attempts: 5,
+        backoff: {
+            type: "exponential",
+            delay: 2000,
+        },
+    });
     return prisma.document.findUniqueOrThrow({
         where: {
             id: document.id,
@@ -111,7 +93,6 @@ const getDocument = async () => {
         downloadUrl: `/api/v1/documents/${doc.id}/download`,
     }));
 };
-
 
 const downloadDocument = async (id: string) => {
     console.log("Downloading document with ID:", id);
@@ -165,19 +146,18 @@ const getOneDocument = async (id: string) => {
     };
 }
 
-
-const deleteDocument = async (id : string)=>{
+const deleteDocument = async (id: string) => {
     const exists = await prisma.document.findUnique({
-        where : {
+        where: {
             id,
         }
     });
-    if(!exists){
+    if (!exists) {
         throw new ApiError(404, 'Data not found.');
     }
 
     return await prisma.document.delete({
-        where:{
+        where: {
             id,
         }
     });
