@@ -73,3 +73,56 @@ model DocumentChunk {
 
   @@index([documentId, chunkIndex])
 }
+
+
+model user {
+  id             String    @id  @default(uuid())
+  firstName      String
+  lastName       String?
+  email          String    @unique(map: "user_email_key")
+  passwordHash   String
+  isActive       Boolean   @default(true)
+  tokenVersion   Int       @default(0)
+  tokenRevokedAt DateTime?
+
+  roleId String?
+  role   Role? @relation(fields: [roleId], references: [id])
+
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  @@index([email], map: "user_email_idx")
+}
+
+model Role {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  description String?
+
+  users           user[]
+  rolePermissions RolePermission[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Permission {
+  id          String @id @default(uuid())
+  key         String @unique
+  description String?
+
+  rolePermissions RolePermission[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model RolePermission {
+  roleId       String
+  permissionId String
+
+  role       Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permission Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+  @@id([roleId, permissionId])
+}

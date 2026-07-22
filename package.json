@@ -33,9 +33,13 @@
     "test": "tsx src/modules/ai/embeddings/test.ts",
     "worker": "tsx watch src/redis/bullmq/doc-process.worker.ts",
     "build": "tsc",
-    "start": "node dist/server.js"
+    "start": "node dist/server.js",
+    "generate-keys": "node setup/generate-keys.ts",
+    "seed:permissions": "tsx src/database/seeds/permission.seed.ts",
+    "seed:super-admin": "tsx src/database/seeds/super_admin.seed.ts"
   },
   "devDependencies": {
+    "@types/bcrypt": "^6.0.0",
     "@types/express": "^5.0.6",
     "@types/multer": "^2.2.0",
     "nodemon": "^3.1.14",
@@ -48,12 +52,14 @@
     "@langchain/textsplitters": "^1.0.1",
     "@prisma/adapter-pg": "^7.8.0",
     "@prisma/client": "^7.8.0",
+    "bcrypt": "^6.0.0",
     "bullmq": "^5.80.10",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
     "ioredis": "^5.11.1",
     "mammoth": "^1.12.0",
     "multer": "^2.2.0",
+    "paseto": "^3.1.4",
     "pdfjs-dist": "^4.10.38",
     "pg": "^8.22.0"
   }
