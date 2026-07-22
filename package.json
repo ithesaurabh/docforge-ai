@@ -36,7 +36,8 @@
     "start": "node dist/server.js",
     "generate-keys": "node setup/generate-keys.ts",
     "seed:permissions": "tsx src/database/seeds/permission.seed.ts",
-    "seed:super-admin": "tsx src/database/seeds/super_admin.seed.ts"
+    "seed:super-admin": "tsx src/database/seeds/super_admin.seed.ts",
+    "seed:staff": "tsx src/database/seeds/staff.seed.ts"
   },
   "devDependencies": {
     "@types/bcrypt": "^6.0.0",
