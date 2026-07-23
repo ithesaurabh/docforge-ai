@@ -1,42 +1,55 @@
-import type {
-    PromptBuilder,
-} from "../interface.js";
-
+import type {PromptBuilder, } from "../interface.js";
 export const promptBuilder: PromptBuilder = {
-    build(question, chunks) {
+
+    build(question, chunks, history) {
+
         const context = chunks
-            .map(
-                (chunk, index) => `
-                    [Source ${index + 1}]
-                    Document: ${chunk.documentId}
-                    Page: ${chunk.page}
-                    ${chunk.content}`
-            ).join("\n------------------------\n");
+            .map((chunk, index) => `
+                [Source ${index + 1}]
+                Document: ${chunk.documentId}
+                Page: ${chunk.page}
+                ${chunk.content}`)
+            .join("\n------------------------\n");
 
-        return `You are an AI assistant for document question answering.
+        const conversationHistory = history.map((message) =>
+                    `${message.role}: ${message.content}`).join("\n");
+        return `
+                You are an AI assistant for document question answering.
 
-            Use ONLY the information provided in the context below.
+                Rules:
+                - Use ONLY the provided document context for factual answers.
+                - Use conversation history only to understand references like "he", "it", "that".
+                - If the answer cannot be found in the documents, reply exactly:
 
-            If the answer cannot be found in the context, reply exactly:
+                "I couldn't find that information in the provided documents."
 
-            "I couldn't find that information in the provided documents."
+                - Be concise and factual.
 
-            Be concise and factual.
 
-            ======================
-            CONTEXT
-            ======================
+                ======================
+                CONVERSATION HISTORY
+                ======================
 
-            ${context}
+                ${conversationHistory || "No previous conversation."}
 
-            ======================
-            QUESTION
-            ======================
 
-            ${question}
+                ======================
+                DOCUMENT CONTEXT
+                ======================
 
-            ======================
-            ANSWER
-            ======================`;
+                ${context}
+
+
+                ======================
+                CURRENT QUESTION
+                ======================
+
+                ${question}
+
+
+                ======================
+                ANSWER
+                ======================
+`;
     },
 };

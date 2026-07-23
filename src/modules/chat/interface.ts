@@ -1,10 +1,10 @@
 import type { RetrievedChunk } from "../ai/retrieval/interface.js";
 
 export interface ChatRequest {
+    userId : string;
+    conversationId: string;
     question: string;
-
     documentIds?: string[];
-
     topK?: number;
 }
 
@@ -31,6 +31,10 @@ export interface ChatService {
 export interface PromptBuilder {
     build(
         question: string,
+        history: {
+            role: "USER" | "ASSISTANT";
+            content: string;
+        }[],
         chunks: RetrievedChunk[]
     ): string;
 }
